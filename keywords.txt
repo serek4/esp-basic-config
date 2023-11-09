@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For
+# esp basic config
+#######################################
+
+#######################################
+# Data Types (KEYWORD1)
+#######################################
+
+BasicConfig   KEYWORD1
+SerializeHandler   KEYWORD1
+DeserializeHandler   KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setup  KEYWORD2
+serialize  KEYWORD2
+deserialize    KEYWORD2
+load   KEYWORD2
+save   KEYWORD2
+print   KEYWORD2
+
+#######################################
+# (KEYWORD3)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
