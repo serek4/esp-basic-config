@@ -1,13 +1,11 @@
 #include "esp-basic-config.hpp"
 
-BasicConfig::BasicConfig(size_t capacity)
-    : _JsonConfigSize(capacity)
-    , _configFileName(DEFAULT_FILE_NAME)
+BasicConfig::BasicConfig()
+    : _configFileName(DEFAULT_FILE_NAME)
     , _logger(nullptr) {
 }
-BasicConfig::BasicConfig(size_t capacity, const char* configFileName)
-    : _JsonConfigSize(capacity)
-    , _configFileName(configFileName)
+BasicConfig::BasicConfig(const char* configFileName)
+    : _configFileName(configFileName)
     , _logger(nullptr) {
 }
 
@@ -69,7 +67,7 @@ void BasicConfig::save() {
 
 String BasicConfig::_serialize(bool pretty) {
 	String jsonConfig = "";
-	DynamicJsonDocument doc(_JsonConfigSize);
+	JsonDocument doc;
 	JsonObject config = doc.to<JsonObject>();
 	for (const auto& handler : _serializeHandlers) handler(config);
 	if (pretty) {
@@ -80,7 +78,7 @@ String BasicConfig::_serialize(bool pretty) {
 	return jsonConfig + "\n";
 }
 bool BasicConfig::_deserialize(String& jsonConfig) {
-	DynamicJsonDocument doc(_JsonConfigSize);
+	JsonDocument doc;
 	DeserializationError error = deserializeJson(doc, jsonConfig);
 	if (error) {
 		BASIC_CONFIG_PRINTF("deserializeJson() failed: %s\n", error.c_str());

@@ -28,17 +28,15 @@
 #endif
 // clang-format on
 
-//* calculate Arduino json document size at https://arduinojson.org/v6/assistant/
-
 #define DEFAULT_FILE_NAME "config"
 
 class BasicConfig {
   public:
-	typedef std::function<void(JsonObject& config)> SerializeHandler;
-	typedef std::function<void(JsonObject& config)> DeserializeHandler;
+	typedef std::function<void(JsonObject config)> SerializeHandler;
+	typedef std::function<void(JsonObject config)> DeserializeHandler;
 
-	BasicConfig(size_t capacity);
-	BasicConfig(size_t capacity, const char* configFileName);
+	BasicConfig();
+	BasicConfig(const char* configFileName);
 
 	void addLogger(void (*logger)(String logLevel, String msg));
 	void setup();
@@ -49,7 +47,6 @@ class BasicConfig {
 	String print(bool pretty = false);
 
   private:
-	size_t _JsonConfigSize;
 	String _configFileName;
 	std::vector<SerializeHandler> _serializeHandlers;
 	std::vector<DeserializeHandler> _deserializeHandlers;
