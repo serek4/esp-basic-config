@@ -11,7 +11,7 @@
 
 #include <ArduinoJson.h>
 #include <esp-basic-fs.hpp>
-#include <vector>
+#include <list>
 
 // #define BASIC_CONFIG_DEBUG
 // debug printing macros
@@ -48,8 +48,8 @@ class BasicConfig {
 
   private:
 	String _configFileName;
-	std::vector<SerializeHandler> _serializeHandlers;
-	std::vector<DeserializeHandler> _deserializeHandlers;
+	std::list<SerializeHandler> _serializeHandlers;
+	std::list<DeserializeHandler> _deserializeHandlers;
 	void (*_logger)(String logLevel, String msg);
 
 	String _serialize(bool pretty = false);
