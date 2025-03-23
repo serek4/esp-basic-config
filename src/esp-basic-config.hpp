@@ -7,6 +7,7 @@
 
 #include <ArduinoJson.h>
 #include <esp-basic-fs.hpp>
+#include <esp-basic-plugin.hpp>
 #include <list>
 
 // #define BASIC_CONFIG_DEBUG
@@ -26,15 +27,14 @@
 
 #define DEFAULT_FILE_NAME "config"
 
-class BasicConfig {
+class BasicConfig : public BasicPlugin {
   public:
 	typedef std::function<void(JsonObject config)> SerializeHandler;
 	typedef std::function<void(JsonObject config)> DeserializeHandler;
 
-	BasicConfig();
 	BasicConfig(const char* configFileName);
+	BasicConfig();
 
-	void addLogger(void (*logger)(String logLevel, String msg));
 	void setup();
 	void serialize(const SerializeHandler& serializeHandler);
 	void deserialize(const DeserializeHandler& deserializeHandler);
@@ -46,7 +46,6 @@ class BasicConfig {
 	String _configFileName;
 	std::list<SerializeHandler> _serializeHandlers;
 	std::list<DeserializeHandler> _deserializeHandlers;
-	void (*_logger)(String logLevel, String msg);
 
 	String _serialize(bool pretty = false);
 	bool _deserialize(String& jsonConfig);

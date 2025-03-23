@@ -1,17 +1,13 @@
 #include "esp-basic-config.hpp"
 
-BasicConfig::BasicConfig()
-    : _configFileName(DEFAULT_FILE_NAME)
-    , _logger(nullptr) {
-}
 BasicConfig::BasicConfig(const char* configFileName)
-    : _configFileName(configFileName)
-    , _logger(nullptr) {
+    : BasicPlugin::BasicPlugin("config")
+    , _configFileName(configFileName) {
+}
+BasicConfig::BasicConfig()
+    : BasicConfig::BasicConfig(DEFAULT_FILE_NAME) {
 }
 
-void BasicConfig::addLogger(void (*logger)(String logLevel, String msg)) {
-	_logger = logger;
-}
 void BasicConfig::setup() {
 	if (!(filesystem._fsStarted)) {
 		BASIC_FS_PRINTLN("file system not mounted yet, mounting");
@@ -30,7 +26,7 @@ String BasicConfig::print(bool pretty) {
 void BasicConfig::load() {
 	// read file config from file
 	if (_readFromFile(_configFileName)) {
-		if (_logger != nullptr) { (*_logger)("config", _configFileName + ".json loaded"); }
+		_log(_info_, _configFileName + ".json loaded");
 		// create/update backup file on success
 		String configMd5 = filesystem.fileMd5(_configFileName + ".json");
 		BASIC_CONFIG_PRINTF("config md5: %s\n", configMd5.c_str());
@@ -39,18 +35,18 @@ void BasicConfig::load() {
 		if (configMd5 != backupMd5) {
 			BASIC_CONFIG_PRINTF("saving/updating %s\n", (_configFileName + "-backup.json").c_str());
 			_saveToFile(_configFileName + "-backup");
-			if (_logger != nullptr) { (*_logger)("config", _configFileName + "-backup.json updated"); }
+			_log(_info_, _configFileName + "-backup.json updated");
 		}
 		return;
 	}
 	// read backup file on error
 	if (_readFromFile(_configFileName + "-backup")) {
-		if (_logger != nullptr) { (*_logger)("config", _configFileName + "-backup.json loaded"); }
+		_log(_warning_, _configFileName + "-backup.json loaded");
 		// overwrite config file with backup file on success
 		_saveToFile(_configFileName);
 		return;
 	}
-	if (_logger != nullptr) { (*_logger)("config", "loaded default config"); }
+	_log(_warning_, "loaded default config");
 	// write new file with default config on backup error
 	_saveToFile(_configFileName);
 }
