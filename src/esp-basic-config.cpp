@@ -72,10 +72,11 @@ String BasicConfig::_serialize(bool pretty) {
 	for (const auto& handler : _serializeHandlers) handler(config);
 	if (pretty) {
 		serializeJsonPretty(doc, jsonConfig);
+		jsonConfig.replace("\r\n", "\n");
 	} else {
 		serializeJson(doc, jsonConfig);
 	}
-	return jsonConfig + "\n";
+	return jsonConfig;
 }
 bool BasicConfig::_deserialize(String& jsonConfig) {
 	JsonDocument doc;
